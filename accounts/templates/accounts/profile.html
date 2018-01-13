@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}profile{% endblock %}
+
+{% block body %}
+
+    {% if profile.avatar %}
+    <img class="frame" src="{{ profile.avatar.url }}" ></br>
+    <a href="{% url 'accounts:avatar_edit' %}" class="button">Edit Avatar</a>
+    {% endif %}
+
+<h1>{{ profile.first_name }} {{ profile.last_name }} profile<h1>
+
+  <ol class="profile">
+      <h2>Date of birth:<p class="text-indent">{{ profile.date_of_birth|date:"d M Y" }}</p></h2>
+      <h2>Bio:<p class="text-indent">{{ profile.bio | safe}}</p></h2>
+      <h2>Hobby:<p class="text-indent">{{ profile.hobby }}</p></h2>
+      <h2>Email:<p class="text-indent">{{ profile.email }}</p></h2>
+      <h2>City:<p class="text-indent">{{ profile.city }}</p></h2>
+      <h2>State:<p class="text-indent">{{ profile.state }}</p></h2>
+      <h2>Country:<p class="text-indent">{{ profile.country }}</p></h2>
+      <h2>Hobby:<p class="text-indent">{{ profile.hobby }}</p></h2>
+
+    <a href="{% url 'accounts:profile_edit' %}" class="button"> Edit Profile </a>
+  </ol>
+
+{% endblock %}

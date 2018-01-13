@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% load static from staticfiles %}
+
+{% block title %}Edit Profile {% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static "css/jquery.guillotine.css" %}">
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/jquery.guillotine.js" %}"></script>
+<script>
+jQuery(function() {
+  var picture = $('#avatar');
+    // Load image
+    picture.one('load', function(){
+    // Initialize plugin
+    picture.guillotine({eventOnChange: 'guillotinechange', width: 300, height: 400});
+    // Display inital data
+    var data = picture.guillotine('getData');
+    for(var key in data) { $('#id_'+key).text(data[key]); }
+    // Bind button actions
+    $('#rotate_left').click(function(){ picture.guillotine('rotateLeft'); });
+    $('#rotate_right').click(function(){ picture.guillotine('rotateRight'); });
+    $('#zoom_in').click(function(){ picture.guillotine('zoomIn'); });
+    $('#zoom_out').click(function(){ picture.guillotine('zoomOut'); });
+    // Update data on change
+    picture.on('guillotinechange', function(ev, data, action) {
+      data.scale = parseFloat(data.scale.toFixed(1));
+      for(var key in data) { $('#id_'+key).text(data[key]); }
+    });
+  });
+});
+</script>
+{% endblock %}
+
+{% block body %}
+<h1>Edit your avatar</h1>
+
+<div id='content'>
+  <div class='frame'>
+    <img id='avatar' src='{{ profile.avatar.url }}'>
+  </div>
+
+  <div id='controls'>
+    <button id='rotate_left'  type='button' title='Rotate left'> &lt; </button>
+    <button id='zoom_out'     type='button' title='Zoom out'> - </button>
+    <button id='zoom_in'      type='button' title='Zoom in'> + </button>
+    <button id='rotate_right' type='button' title='Rotate right'> &gt; </button>
+  </div>
+</div>
+<form method="POST" action="{% url 'accounts:avatar_edit' %}">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ form.scale }}
+    {{ form.angle }}
+    {{ form.x }}
+    {{ form.y }}
+    {{ form.w }}
+    {{ form.h }}
+    <input type="submit" class="button-primary" value="Save">
+</form>
+
+{% endblock %}
